@@ -22,8 +22,7 @@
             <div >Date of Birth</div>
             <input type="date" id="date" class="arr1">
             
-            <div id="pas">Password</div>
-            <input type="password" id="password" class="arr1" placeholder="Password">
+
             
             <div><input type="button" id="bt5" onclick="reg()" value="Registration"></div>
         </div>
@@ -43,9 +42,12 @@
 				}else{
 				    json.date=date;
 				}
-				json.password=document.getElementById("password").value;
+				
 				sendToServer("Registration");	
 			}
+            if(object){
+                alert(object.error);
+            }
 			
 </script>
 

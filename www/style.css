@@ -9,6 +9,8 @@
     text-align:center
 }
 
+
+
 #ava {
     margin-left: 250px;
     margin-top: 5px;
@@ -56,6 +58,7 @@ k4 {
     height: 99%;
     position: relative;
     display: inline-block;
+    text-align:left
 }
 .right{
     position: relative;
@@ -160,9 +163,6 @@ k6 {
     background: rgb(0 0 0 / 0%) !important;
     font-size: 16px;
     font-family: cursive;
-    overflow: auto; 
-    overflow-wrap: break-word;
-    transition-duration: 152ms;
     padding: 5px;
     caret-color:rgb(0, 0, 0);
     color: black;
@@ -181,9 +181,7 @@ k6 {
     margin: 55px;
     background-color: rgb(227, 239, 242);
 }
-#pas {
-    height: 25%;
-}
+
 #arr {
     width: 15%;
     height: 100%;
@@ -192,9 +190,11 @@ k6 {
     width: 15%;
     height: 25%;
 }
-#Mail {
-    margin-top:100px;
+
+table{
+	margin:100px
 }
+
 #bt4 {
     margin: 10%;
     background-color: rgb(227, 239, 242);
@@ -215,7 +215,6 @@ k6 {
 #mes {
     position: relative;
     width: 1400px;
-    height: 90px;
     font-size: 80px;
     margin:0 auto;
     text-align: center;

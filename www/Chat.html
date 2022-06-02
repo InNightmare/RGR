@@ -6,7 +6,7 @@
     
     <div id="body">
         <div>
-	Ваш профиль (аватар кликабелен): <a href="./Profile"><img src="ava.jpg" width="100" height="100" id="ava"></a>
+	Ваш профиль (аватар кликабелен): <a href="javascript:viewSelf()"><img src="ava.jpg" width="100" height="100" id="ava"></a>
 	<span id="nickname"></span>
 	<button onclick="sendToServer('Exit')">Exit</button>
         </div>
@@ -20,7 +20,7 @@
                     <select id="list">
                     </select>
                     
-                    <input type="button" onclick="addToChat()" id="add" value="+ (добавить)">
+                    <input type="button" onclick="addToChat()" id="add" value="+">
                 </div>
                 <ul id="chat">
                     
@@ -30,11 +30,11 @@
             </div>
             <div class="div right">
                 <div id="group-name">
-	        Группа из <span id="size"></span> участника(ов). <span id="admin"></span> 
+	        <span id="size"></span>. <span id="admin"></span> 
                 </div>
-	    
-                <div id="messages"></div>
-                <div id="input-text-block">          
+	    <div id="input-text-block">
+                    <div id="messages"></div>
+                              
                     <input type="text" id="message"> 
                     <input type="button" value="Send" onclick="send(document.getElementById('message').value)">                 
                 </div>
@@ -67,7 +67,6 @@
 				res++;
 			}
 		}
-                        document.getElementById("size").innerHTML=res;
 		return res;
 	}
 
@@ -78,46 +77,69 @@
                    select.innerHTML="";
 	       ul.innerHTML="";
 	       select.innerHTML="";
-                   if(object.admin>-1){
-                   	admin.innerHTML="Админ группы: <font color='blue'>"+object.users[object.admin].login+"</font>";
+	       var groupSize=size();
+	       var sizeHolder=document.getElementById("size");
+	       switch(groupSize){
+		case 1:
+			sizeHolder.innerHTML="Заметки";
+			break;
+		case 2:
+			sizeHolder.innerHTML="Личный чат";
+			break;
+		default:
+			sizeHolder.innerHTML="Группа из "+groupSize+" участников";
+                   }
+	       
+                   if(object.admin>-1&&size()>1){
+                   	admin.innerHTML+="Админ группы: <font color='blue'>"+object.users[object.admin].login+"</font>";
 		if(object.admin==object.client){
 			admin.innerHTML+=" (Вы)";
 		}
 	       }else{
+			   
 		admin.innerHTML="Группа ещё не создана (она порождается первым сообщением, кто его отправит, тот и админ)";
 	       }
 	       for(var id in object.users){
 		if(object.users[id].inChat){
-			var removeClick
-			var removeFromView
-			var ban
+			var s="<li><a href='javascript:view("+id+")'>"+object.users[id].login+"</a>";
 			if(id==object.client){
-				removeClick="javascript:removeAllFromView()";
 				if(size()>1){
-					removeFromView="Exit from chat";
-				}else{
-					removeFromView="";
+					s+=" <button onclick='removeAllFromView()'>Exit from chat</button>";
 				}
 			}else{
-				removeClick="javascript:removeFromChat("+id+")";
-				removeFromView="<button>-</button>";
+				s+=" <button onclick='removeFromChat("+id+")'>-</button>";
 			}
-			var s="<li>"+object.users[id].login;
-			s+=" <a href='"+removeClick+"'>"+removeFromView+"</a>";
-                                    ul.innerHTML+=s+" <a href=''>Забанить</a></li>";
+			if(object.admin>-1){
+				var name=null;
+				if(object.client==object.admin && id!=object.client){//если я - админ и управляю другим человеком
+					name=object.users[id].isBannedByAdmin?"Разбанить":"Забанить";
+				}else{
+					if(id==object.client){
+						if(object.users[id].isBannedByAdmin==null){
+							name="Отписаться";
+						}else{
+							if(!object.users[id].isBannedByAdmin || object.client == object.admin){
+								name="Подписаться";
+							}
+						}
+					}			
+					
+				}
+				if(name!=null){
+                                    		s+=" <a href='javascript:changeBan("+id+")'>"+name+"</a></li>";
+				}
+			}
+			ul.innerHTML+=s;
 		}else{
 			select.innerHTML+="<option value='"+id+"'>"+object.users[id].login+"</option>";
 		}
 	       }
-	       document.getElementById("input-text-block").style.display="block";
-	       if(size()==count){
-			document.getElementById("select").style.display="none";
-	       }else{
-			document.getElementById("select").style.display="block";
-	       }
+	       document.getElementById("input-text-block").style.display=(object.users[object.client].isBannedByAdmin!=null?"none":"block");
+	       select.style.display=(groupSize==count?"none":"inlne-block");
 	       screen.innerHTML="";
 	       for(var i=0;i<object.messages.length;i++){
-			var datetime="<font color='yellow'>"+object.messages[i].date+"</font>";
+			var datetime="<font color='white'>"+object.messages[i].author+"</font>";
+			datetime+=" <font color='yellow'>"+object.messages[i].date+"</font>";
 			screen.innerHTML+=datetime+" <font color='red'>"+object.messages[i].text+"</font>";
 			if(i<object.messages.length-1){
 				screen.innerHTML+='<br>';
@@ -127,17 +149,22 @@
 
 	}
 	refresh();
-	
+	function changeBan(id){
+		if(object.users[id].isBannedByAdmin==null || !object.users[id].isBannedByAdmin && object.client==object.admin) {
+			json.ban=id;
+		}else{
+			json.unban=id;
+		}
+		send();
+	}
 
             function addToChat(){
 	       object.users[select.value].inChat=true;
-	       refresh();
                    send();
             }
 
             function removeFromChat(id){
 	       object.users[id].inChat=false;
-	       refresh();
 	       send();
                    
             }
@@ -145,7 +172,6 @@
 	       for(var id in object.users){
 	       	object.users[id].inChat=(id==object.client);
 	       }
-	       refresh();
                    send();
             }
 
@@ -153,7 +179,6 @@
          
 
             function send(message){
-                json={};
                 if(message){
                 	json.message=message;
 	    }
@@ -184,6 +209,14 @@
 				vm.onload = answer;
 	
 	}
+	function view(id){
+		json.id=id;
+		sendToServer("Profile");
+	}
+	function viewSelf(){
+		sendToServer("Profile");
+	}
+
 </script>
 
 

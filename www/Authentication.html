@@ -13,8 +13,8 @@
 	<div>Aвторизация</div>
         </div>
 
-        <div style="display:inline-block;font-size:50px;font-family:cursive">
-        <table>
+        <div style="font-size:50px;font-family:cursive">
+        <center><table>
 	<tr>
 		<td>Mail</td>
 		<td><input type="text" id="mail" placeholder="Mail"></td>
@@ -23,9 +23,10 @@
 		<td>Password</td>
 		<td><input type="password" id="password" placeholder="password"></td>
 	</tr>
-        </table>
+        </table></center>
+        
         </div>
-
+        Забыли пароль? <button onclick='sendPassword()'>Выслать пароль на почту</button>
         <div id="bottom">
         	<input type="button" id="bt4" value="Entrance" onclick="auth()">
         	<input type="button" id="bt4" value="Registration" onclick="sendToServer('Registration')">
@@ -36,11 +37,13 @@
 </body>
 <script>
             function auth(){
-		json = {};
 		json.mail=document.getElementById("mail").value;
 		json.password=document.getElementById("password").value;
-		sendToServer("");
-		
+		sendToServer("");		
+	}
+	function sendPassword(){
+		json.mail=document.getElementById("mail").value;
+		sendToServer("sendPassword");
 	}
 </script>
 </html>
