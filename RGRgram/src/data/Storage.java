@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 public class Storage {
 
-	private static boolean MYSQL = true;
+	static boolean MYSQL = true;
 
 	private Connection connection;
 
@@ -56,6 +56,51 @@ public class Storage {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Boolean isBannedByAdmin(int userId, int chatId) {
+		try {
+			Statement s = connection.createStatement();
+			String where = " where userInChat=" + userId + " and chatId=" + chatId;
+			ResultSet r = s.executeQuery("select * from membership" + where);
+			if (r.next()) {
+				return r.getBoolean("isBanned");
+			} else {
+				return null;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public void ban(int userId, int chatId,boolean admin) {
+		try {
+			Statement s = connection.createStatement();
+			String where = " where userInChat=" + userId + " and chatId=" + chatId;
+			ResultSet r = s.executeQuery("select * from membership" + where);
+			if (r.next()) {
+				s.executeUpdate("update membership set isBanned=" + admin + where);
+
+			} else {
+				s.executeUpdate("insert into membership (chatId,userInChat, isBanned) values (" + chatId + "," + userId
+						+ "," + admin + ")");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void unban(int userId, int chatId) {
+		try {
+			Statement s = connection.createStatement();
+			String where = " where userInChat=" + userId + " and chatId=" + chatId;
+			s.executeUpdate("delete from membership"+where);
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -155,6 +200,20 @@ public class Storage {
 		}
 	}
 
+	public String getPassword(String mail) {
+		try {
+			Statement s = connection.createStatement();
+			ResultSet r = s.executeQuery("select * from users where mail='" + mail+"'");
+			if (r.next()) {
+				return r.getString("password");
+			}
+			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public int getGroup(HashSet<Integer> group) {
 		try {
 			Statement s = connection.createStatement();
@@ -236,7 +295,7 @@ public class Storage {
 			Statement s = connection.createStatement();
 			ResultSet r = s.executeQuery("select * from message where chatId=" + group);
 			while (r.next()) {
-				Message message = new Message(r.getString("textOfMessage"), r.getTimestamp("date"));
+				Message message = new Message(r.getString("textOfMessage"), r.getTimestamp("date"),getLogin(r.getInt("who")));
 				res.add(message);
 			}
 
@@ -249,7 +308,7 @@ public class Storage {
 	public void createMessage(String text, int group, int author) {
 		try {
 			Statement s = connection.createStatement();
-			Message message = new Message(text);
+			Message message = new Message(text,getLogin(author));
 			s.executeUpdate("insert into message (textOfMessage,date,additionalContent,chatId,who) values ('" + text
 					+ "','" + message.getTimestamp() + "',''," + group + "," + author + ")");
 

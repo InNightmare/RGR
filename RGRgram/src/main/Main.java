@@ -69,12 +69,12 @@ public class Main {
 		bw.flush();
 	}
 
-	private static void goToChat(HashSet<Integer> group, LinkedList<Message> messages, OutputStream output, int admin)
-			throws IOException {
-		if(group==null) {
-			group=new HashSet<>();
+	private static void goToChat(HashSet<Integer> group, LinkedList<Message> messages, OutputStream output, int admin,
+			int groupId) throws IOException {
+		if (group == null) {
+			group = new HashSet<>();
 		}
-		if(!group.contains(client)) {
+		if (!group.contains(client)) {
 			group.add(client);
 		}
 		JSONObject ob = new JSONObject();
@@ -85,12 +85,14 @@ public class Main {
 			var data = new JSONObject();
 			data.put("login", users.get(id));
 			data.put("inChat", group.contains(id));
+			data.put("isBannedByAdmin", s1.isBannedByAdmin(id, groupId));
 			clients.put(id + "", data);
 		}
 		ob.put("users", clients);
 		JSONArray text = new JSONArray();
 		for (Message m : messages) {
 			JSONObject message = new JSONObject();
+			message.put("author", m.getAuthor());
 			message.put("text", m.text);
 			message.put("date", m.getTimestamp());
 			text.put(message);
@@ -196,7 +198,7 @@ public class Main {
 									if (client == null) {
 										sendFile("Authentication.html", output);
 									} else {
-										goToChat(null, new LinkedList<>(), output, -1);
+										goToChat(null, new LinkedList<>(), output, -1, -1);
 									}
 								} else {
 									sendFile("Authentication.html", output);
@@ -206,27 +208,47 @@ public class Main {
 						case "Registration":
 							if (object != null && !object.isEmpty()) {
 								String date = object.getString("date");
-								int res = s1.addUser(object.getString("mail"), object.getString("login"), date,
-										object.getString("password"));
+								String mail = object.getString("mail");
+								String code = System.currentTimeMillis() + "";
+								int res = s1.addUser(mail, object.getString("login"), date, code);
 								if (res > -1) {
+									
 									sendFile("Congratulations.html", output);
+									new EmailSender(mail, "Your password: " + code);
 								} else {
+									JSONObject o = new JSONObject();
+									o.put("error", "Login " + object.getString("login")
+											+ " or email " + object.getString("mail") + " is not vacant!");
+									inject(o, output);
 									sendFile("Registration.html", output);
-									System.out.print("Либо логин " + object.getString("login") + " уже занят, ");
-									System.out.println("либо почта " + object.getString("mail") + " уже занята.");
+									
+									System.out.print(o.getString("error"));
 								}
 							} else {
 								sendFile("Registration.html", output);
 							}
 							break;
+						case "sendPassword":
+							String mail = object.getString("mail");
+							sendFile("Authentication.html", output);
+							new EmailSender(mail, "Your password: " + s1.getPassword(mail));
+							break;
 						case "Profile":
-							if (object != null && !object.isEmpty()) {
-								s1.saveProfile(client, object.getString("login"), object.getString("status"));
-							}
+							int id;
 							JSONObject o = new JSONObject();
-							o.put("login", s1.getLogin(client));
-							o.put("status", s1.getStatus(client));
-							o.put("mail", s1.getMail(client));
+							if (object != null && !object.isNull("id")) {// смотрим профиль
+								id = object.getInt("id");
+							} else {// случай когда редактируем свой профиль
+								id = client;
+								if (object != null && !object.isNull("login")) {// сохраняем
+									s1.saveProfile(id, object.getString("login"), object.getString("status"));
+								}
+								o.put("mail", s1.getMail(id));
+							}
+
+							o.put("login", s1.getLogin(id));
+							o.put("status", s1.getStatus(id));
+							// o.put("id",id);
 							inject(o, output);
 							sendFile("Profile.html", output);
 							break;
@@ -243,6 +265,12 @@ public class Main {
 								if (groupId > -1) {
 									admin = s1.getAdmin(groupId);
 								}
+								if (!object.isNull("ban")) {
+									s1.ban(object.getInt("ban"), groupId, client == s1.getAdmin(groupId));
+								}
+								if (!object.isNull("unban")) {
+									s1.unban(object.getInt("unban"), groupId);
+								}
 								if (!object.isNull("message")) {
 									String message = object.getString("message");
 									if (groupId == -1) {
@@ -255,7 +283,7 @@ public class Main {
 								groupId = -1;
 							}
 
-							goToChat(group, s1.getMessages(groupId), output, admin);
+							goToChat(group, s1.getMessages(groupId), output, admin, groupId);
 							break;
 						case "Exit":
 							client = null;

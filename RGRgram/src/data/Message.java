@@ -6,15 +6,23 @@ import java.util.Date;
 public class Message {
 	private Date datetime;
 	public final String text;
+	private String author;
 
-	public Message(String text) {
+	public Message(String text,String author) {
 		this.text = text;
 		datetime = new Date();
+		this.author = author;
 	}
 
-	Message(String text, Date datetime) {
+	Message(String text, Date datetime,String author) {
 		this.text = text;
 		this.datetime = datetime;
+		this.author = author;
+	}
+	
+	public String getAuthor() {
+		return author;
+		
 	}
 
 	public String getTimestamp() {
@@ -24,7 +32,7 @@ public class Message {
 		if (month.length() < 2) {
 			month = "0" + month;
 		}
-		String date = c.get(Calendar.DAY_OF_MONTH) + 1 + "";
+		String date = c.get(Calendar.DAY_OF_MONTH) + "";
 		if (date.length() < 2) {
 			date = "0" + date;
 		}
