@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<script>
+
+	var object = {Artur:true,Danila:true,Tester:false,Bogdan:false};
+                        
+</script>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGRgram</title>
+    <!--link  rel="stylesheet" href="style.css"--> 
+			<style>
+	#body{
+    width: 100%;
+    height: 100%;
+    background: rgb(204, 255, 238);
+    position: absolute;
+    top: 0;
+    left: 0; 
+    overflow: auto;
+    font-size: 0;
+}
+#ava {
+    margin-left: 250px;
+    margin-top: 5px;
+}
+#ava1 {
+    margin-left: 5px;
+    margin-top: 5px;
+}
+#logo{
+    position: relative;
+    width: 1400px;
+    height: 90px;
+    font-size: 50px;
+    margin:0 auto;
+    text-align: center;
+    font-family: cursive;
+}
+k1 {
+    color:rgb(253, 69, 69);
+}
+k2 {
+    color: navy;
+}
+k3 {
+    color:green;
+}
+k4 {
+    padding-bottom: 10px;
+    margin-left:10px;
+}
+.gener{
+    width: 1400px;
+    height: 830px;
+    margin: 0 auto;
+    overflow: auto; 
+    background-color: rgb(204, 255, 238); 
+    display: flex;
+}
+.left{
+    background-color: rgb(255, 255, 255);
+    width: 30%;
+    height: 99%;
+    position: relative;
+    display: inline-block;
+}
+.right{
+    position: relative;
+    width: 70%;
+    height: 100%;
+    background: rgb(0, 0, 0);
+    display: inline-block;
+}
+#prof{
+    width: 100%;
+    height: 10%;
+    background-color: rgb(255, 255, 255);
+    font-size: 50px;
+    border-bottom: 1px solid rgb(137, 158, 158);
+}
+k5 {
+    margin-left:80px;
+    color:rgb(0, 0, 0);
+}
+.guys{
+    width: 100%;
+    height: 90%;
+    margin-bottom: auto;
+
+    
+}
+ul{
+    padding-left:0;
+    margin:0;
+    list-style-type:none;
+    overflow-y:auto;
+    height:100%;
+}
+li{
+    padding: 10px 80px;
+    border-bottom: 1px solid rgb(137, 158, 158);
+    background-color: rgb(255, 255, 255);
+}
+h2,h3,h4{
+    margin:0;
+}
+li .guys{
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 12px;
+    border-bottom: 10px black;
+}
+li h2{
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+li h3 {
+    font-size:15px;
+    color:rgb(34, 248, 130);
+    font-weight:normal;
+}
+li h4 {
+    font-size:15px;
+    color:rgb(248, 34, 34);
+    font-weight:normal;
+}
+li h5 {
+    font-size:15px;
+    color:rgb(34, 248, 95);
+    font-weight:normal;
+}
+ul :hover{
+    background-color: rgb(155, 190, 213);
+}
+.namechat{
+    width: 100%;
+    height: 10%;
+    background-color: rgb(255, 255, 255);
+    border-left: 1px solid black;
+    border-bottom: 1px solid rgb(72, 72, 72);
+}
+k6 {
+    font-size: 40px;
+    margin-left:10px;
+}
+#messenges{
+    width: 100%;
+    height: 76%;
+    background-color: rgb(131, 250, 200);
+    border-left: 1px solid black;
+}
+#inputTextBlock{
+    width: 100%;
+    height: 14%;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    border-left: 1px solid black;
+}
+#inputText{
+    margin: 30px;
+    width: 80%;
+    border: 3px solid rgb(160, 200, 187);
+    border-radius: 5px;
+    outline: none;
+    background: rgb(0 0 0 / 0%) !important;
+    font-size: 16px;
+    font-family: cursive;
+    overflow: auto; 
+    overflow-wrap: break-word;
+    transition-duration: 152ms;
+    padding: 5px;
+    caret-color:rgb(0, 0, 0);
+    color: black;
+}
+#bt1{
+    margin: 40px;
+    background-color: rgb(227, 239, 242);
+    
+}
+#bt2{
+    margin: 10px;
+    background-color: rgb(227, 239, 242);
+    
+}
+#bt3{
+    margin: 55px;
+    background-color: rgb(227, 239, 242);
+}
+#pas {
+    height: 25%;
+}
+#arr {
+    width: 15%;
+    height: 100%;
+}
+#arr1 {
+    width: 15%;
+    height: 25%;
+}
+#mail {
+    margin-top:100px;
+}
+#bt4 {
+    margin: 10%;
+    background-color: rgb(227, 239, 242);
+}
+#butt {
+    margin: 15%;
+    margin-top: 15px;
+}
+#form {
+    position: relative;
+    width: 1400px;
+    height: 90px;
+    font-size: 30px;
+    margin:0 auto;
+    text-align: center;
+    font-family: cursive;
+}
+#mes {
+    position: relative;
+    width: 1400px;
+    height: 90px;
+    font-size: 80px;
+    margin:0 auto;
+    text-align: center;
+    font-family: cursive;
+}
+			</style>
+</head>
+<body>
+    
+    <div id="body">
+        <img src="ava.jpg" width="100" height="100" id="ava">
+        <div id="logo"> <k1>R</k1><k2>G</k2><k3>R</k3><k4>gram</k4></div>
+        <div class="gener div">
+            <div class="div left">
+                <div class="prof" id="prof"> <input type="text" id="arr" placeholder="search friend">
+                    <input type="button" id="bt2" value="search" onclick="search()">
+                    <input type="button" id="bt3" value="+">
+                </div>
+                <div class="guys" id="guys">
+                    
+                    
+                </div>
+
+            </div>
+            <div class="div right">
+                <div class="namechat top">
+                    <k6></k6>
+                </div>
+                <div id="messenges"></div>
+                <div id="inputTextBlock">
+                    
+                    <div id="inputText" contenteditable="true" role="textbox"  contenteditable="true" dir="auto" aria-labelledby="Message"></div> 
+                    <input type="button" id="bt1" value="send">
+                    
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+        
+    </div>
+</body>
+<script>
+	var guys="";
+	for(g in object){
+		if(object[g])
+		{
+			guys+="<li><h2>"+g+"</h2><br><h3>"+"Online"+"</h3></li>";
+		}else
+		{
+			guys+="<li><h2>"+g+"</h2><br><h4>"+"Offline"+"</h4></li>";
+		}
+	
+	}
+	document.getElementById("guys").innerHTML="<ul>"+guys+"</ul>";
+	
+	function search(){
+				var text = document.getElementById("arr").value;
+				var object = {text:text};
+				var vm = new XMLHttpRequest();
+				vm.open("GET","./student?json="+JSON.stringify(object));
+				vm.send();
+				
+				function answer(){
+					var r = vm.response.substring(vm.response.indexOf("{"));
+					r = r.substring(0,r.indexOf("</sc"+"ript>"));
+					//alert(r);
+					object = JSON.parse(r);
+					refresh();
+				}
+				vm.onload = answer;
+	
+	}
+</script>
+
+
+
+
+</html>
